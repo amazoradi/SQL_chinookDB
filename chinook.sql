@@ -149,7 +149,15 @@ FROM (
  As "sales"
 
 -- 20-top_agent.sql: Which sales agent made the most in sales over all?
-
+SELECT sales.FirstName || " " || sales.LastName as "Employee Name", max(sales.TotalSales) as "Total Sales"
+FROM (
+    SELECT e.FirstName, e.LastName, sum(i.total) as "TotalSales"
+    FROM Employee e
+    JOIN Customer c ON e.EmployeeID = c.SupportRepID
+    JOIN Invoice i ON c.CustomerID = i.CustomerId
+    GROUP BY e.FirstName
+)
+AS "sales"
 -- 21-sales_agent_customer_count.sql: Provide a query that shows the count of customers assigned to each sales agent.
 
 -- 22-sales_per_country.sql: Provide a query that shows the total sales per country.
