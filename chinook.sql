@@ -200,6 +200,35 @@ AS "songs"
 
 -- 25-top_5_tracks.sql: Provide a query that shows the top 5 most purchased tracks over all.
 
+Select t.Name, count(i.InvoiceId) as "SongCount"
+From Invoice i
+JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+JOIN Track t ON il.TrackId = t.TrackId
+GROUP BY t.Name
+ORDER BY SongCOunt DESC
+LIMIT 5
+
 -- 26-top_3_artists.sql: Provide a query that shows the top 3 best selling artists.
 
+Select a.Name, count(i.InvoiceId) as "number of purchases", sum(i.total) as "Money spent on Artist"
+From Invoice i
+JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+JOIN Track t ON il.TrackId = t.TrackId
+JOIN Album al ON t.AlbumId = al.AlbumId
+JOIN Artist a ON al.ArtistId = a.ArtistId
+GROUP BY a.Name
+ORDER BY "Money spent on Artist" DESC
+LIMIT 3
+
+-- not sure if this is asking for most money made or most tracks sold
+
 -- 27-top_media_type.sql: Provide a query that shows the most purchased Media Type.
+
+Select mt.Name, count(i.InvoiceId) as "number of purchases", sum(i.total) as "Money spent on Media Type"
+From Invoice i
+JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+JOIN Track t ON il.TrackId = t.TrackId
+JOIN MediaType mt ON t.MediaTypeId = mt.MediaTypeId
+GROUP BY mt.Name
+ORDER BY "number of purchases" DESC
+LIMIT 1
