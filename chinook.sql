@@ -137,6 +137,7 @@ JOIN Invoice i ON c.CustomerID = i.CustomerId
 GROUP BY e.FirstName
 
 -- 19-top_2009_agent.sql: Which sales agent made the most in sales in 2009?Hint: Use the MAX function on a subquery.
+
 SELECT sales.FirstName || " " || sales.LastName as "Employee Name", max(sales.TotalSales) as "Total Sales"
 FROM (
     SELECT e.FirstName, e.LastName, sum(i.total) as "TotalSales"
@@ -149,6 +150,7 @@ FROM (
  As "sales"
 
 -- 20-top_agent.sql: Which sales agent made the most in sales over all?
+
 SELECT sales.FirstName || " " || sales.LastName as "Employee Name", max(sales.TotalSales) as "Total Sales"
 FROM (
     SELECT e.FirstName, e.LastName, sum(i.total) as "TotalSales"
@@ -159,6 +161,7 @@ FROM (
 )
 AS "sales"
 -- 21-sales_agent_customer_count.sql: Provide a query that shows the count of customers assigned to each sales agent.
+
 SELECT e.FirstName || " " || e.LastName as "Employee Name", count(c.CustomerID) as "Number of Customers"
 FROM Employee e
 JOIN Customer c ON e.EmployeeID = c.SupportRepId
@@ -166,9 +169,34 @@ GROUP BY e.FirstName
 
 -- 22-sales_per_country.sql: Provide a query that shows the total sales per country.
 
+SELECT c.Country, sum(i.Total) as "Total Sales"
+From Invoice i
+JOIN Customer c ON i.CustomerId = c.CustomerId
+GROUP BY c.Country
+
 -- 23-top_country.sql: Which country's customers spent the most?
 
+SELECT sales.Country, max(sales.TotalSales) as "Total Sales"
+FROM (
+    SELECT c.Country, sum(i.Total) as "TotalSales"
+    From Invoice i
+    JOIN Customer c ON i.CustomerId = c.CustomerId
+    GROUP BY c.Country
+) 
+AS "sales"
+
 -- 24-top_2013_track.sql: Provide a query that shows the most purchased track of 2013.
+
+SELECT songs.Name, max(songs.SongCount) as "Number of Purchases"
+FROM (
+    Select t.Name, count(i.InvoiceId) as "SongCount"
+    From Invoice i
+    JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+    JOIN Track t ON il.TrackId = t.TrackId
+    WHERE strftime("%Y", i.Invoicedate) = "2013"
+    GROUP BY t.Name
+) 
+AS "songs"
 
 -- 25-top_5_tracks.sql: Provide a query that shows the top 5 most purchased tracks over all.
 
