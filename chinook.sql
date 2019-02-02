@@ -159,6 +159,10 @@ FROM (
 )
 AS "sales"
 -- 21-sales_agent_customer_count.sql: Provide a query that shows the count of customers assigned to each sales agent.
+SELECT e.FirstName || " " || e.LastName as "Employee Name", count(c.CustomerID) as "Number of Customers"
+FROM Employee e
+JOIN Customer c ON e.EmployeeID = c.SupportRepId
+GROUP BY e.FirstName
 
 -- 22-sales_per_country.sql: Provide a query that shows the total sales per country.
 
