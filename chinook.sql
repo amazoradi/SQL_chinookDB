@@ -137,12 +137,16 @@ JOIN Invoice i ON c.CustomerID = i.CustomerId
 GROUP BY e.FirstName
 
 -- 19-top_2009_agent.sql: Which sales agent made the most in sales in 2009?Hint: Use the MAX function on a subquery.
-SELECT e.FirstName, e.LastName, sum(i.total) as "Total sales"
-FROM Employee e
-JOIN Customer c ON e.EmployeeID = c.SupportRepID
-JOIN Invoice i ON c.CustomerID = i.CustomerId
-WHERE strftime("%Y", i.Invoicedate) = "2009"
-GROUP BY e.FirstName
+SELECT sales.FirstName || " " || sales.LastName as "Employee Name", max(sales.TotalSales) as "Total Sales"
+FROM (
+    SELECT e.FirstName, e.LastName, sum(i.total) as "TotalSales"
+    FROM Employee e
+    JOIN Customer c ON e.EmployeeID = c.SupportRepID
+    JOIN Invoice i ON c.CustomerID = i.CustomerId
+    WHERE strftime("%Y", i.Invoicedate) = "2009"
+    GROUP BY e.FirstName
+)
+ As "sales"
 
 -- 20-top_agent.sql: Which sales agent made the most in sales over all?
 
